@@ -5,7 +5,9 @@ from nonebot_plugin_session import extract_session, SessionIdType
 from .config import config
 
 plus = on_message(priority=config.plus_one_priority, block=False)
-msg_dict = {}
+#msg_dict = {}
+last_msg = ""
+repeat_times = 0
 
 
 def is_equal(msg1: Message, msg2: Message):
@@ -19,7 +21,9 @@ def is_equal(msg1: Message, msg2: Message):
 
 @plus.handle()
 async def plush_handler(bot: Bot, event: Event):
-    global msg_dict
+#    global msg_dict
+    global last_msg
+    global repeat_times
 
     session = extract_session(bot, event)
     group_id = session.get_id(SessionIdType.GROUP).split("_")[-1]
@@ -27,22 +31,29 @@ async def plush_handler(bot: Bot, event: Event):
         return
 
     # 获取群聊记录
-    text_list = msg_dict.get(group_id, None)
-    if not text_list:
-        text_list = []
-        msg_dict[group_id] = text_list
+#    text_list = msg_dict.get(group_id, None)
+#    if not text_list:
+#        text_list = []
+#        msg_dict[group_id] = text_list
 
     # 获取当前信息
     msg = event.get_message()
-
-    try:
-        if not is_equal(text_list[-1], msg):
-            text_list = []
-            msg_dict[group_id] = text_list
-    except IndexError:
-        pass
-
-    text_list.append(msg)
-
-    if len(text_list) > 1:
+    if is_equal(last_msg, msg):
+        repeat_times += 1
+    else:
+        repeat_times = 0
+    last_msg = msg
+    if repeat_times == 1:
         await plus.send(msg)
+
+#    try:
+#        if not is_equal(text_list[-1], msg):
+#            text_list = []
+#            msg_dict[group_id] = text_list
+#    except IndexError:
+#        pass
+
+#    text_list.append(msg)
+
+#    if len(text_list) > 1:
+#        await plus.send(msg)
