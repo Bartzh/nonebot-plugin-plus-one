@@ -42,7 +42,7 @@ async def plush_handler(bot: Bot, event: GroupMessageEvent):
     msg = event.get_message()
 
     if group_id not in group_dict:
-        group_dict[group_id] = {"last_msg":"","repeat_times":0}
+        group_dict[group_id] = {"last_msg":"","repeat_times":0,"random_time":9}
     if is_equal(group_dict[group_id]["last_msg"], msg):
         group_dict[group_id]["repeat_times"] += 1
     else:
