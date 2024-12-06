@@ -1,3 +1,5 @@
+import random
+
 from nonebot.plugin import on_message
 from nonebot.adapters import Event, Message, Bot
 from nonebot_plugin_session import extract_session, SessionIdType
@@ -47,6 +49,8 @@ async def plush_handler(bot: Bot, event: GroupMessageEvent):
         group_dict[group_id]["repeat_times"] = 0
     group_dict[group_id]["last_msg"] = msg
     if group_dict[group_id]["repeat_times"] == 1:
+        gourp_dict[group_id]["random_time"] = random.randint(1, 3)
+    if group_dict[group_id]["repeat_times"] == gourp_dict[group_id]["random_time"]:
         await plus.send(msg)
 
 #    try:
